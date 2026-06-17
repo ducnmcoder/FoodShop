@@ -1,0 +1,10 @@
+com\foodshop\repository\UserRepository.class
+com\foodshop\config\WebConfig.class
+com\foodshop\controller\AuthController.class
+com\foodshop\FoodshopApplication.class
+com\foodshop\model\Food.class
+com\foodshop\controller\FoodController.class
+com\foodshop\dto\LoginRequest.class
+com\foodshop\dto\RegisterRequest.class
+com\foodshop\repository\FoodRepository.class
+com\foodshop\model\User.class
