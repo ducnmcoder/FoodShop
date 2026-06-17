@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodShop - Cart</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8fff8; }
+        .page-header { background: #28a745; color: white; padding: 40px 0; text-align: center; }
+        .btn-main { background-color: #28a745; color: white; border: none; transition: 0.2s; }
+        .btn-main:hover { background-color: #218838; color: white; }
+        .cart-item-img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg bg-white sticky-top shadow-sm">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="Homepage.html">
+            <img src="image/LogoPage.png" alt="FoodShop Logo" height="40">
+            <span class="text-success ms-2 fw-bold fs-4">FoodShop</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+                <li class="nav-item"><a class="nav-link" href="Homepage.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="products.html">Food List</a></li>
+                <li class="nav-item"><a class="nav-link" href="Blog.html">Blog</a></li>
+                <li class="nav-item"><a class="nav-link" href="About.html">About Us</a></li>
+                <li class="nav-item"><a class="nav-link" href="Contact.html">Contact</a></li>
+                <li class="nav-item"><a class="nav-link active text-success fw-semibold" href="cart.html">Cart <span id="cartCount" class="badge bg-danger">0</span></a></li>
+            </ul>
+            <div class="ms-lg-3 mt-2 mt-lg-0" id="authSection">
+                <button class="btn btn-outline-success me-2 btn-sm" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+                <button class="btn btn-main btn-sm" data-bs-toggle="modal" data-bs-target="#registerModal">Register</button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="page-header">
+    <h1 class="fw-bold">Your Cart</h1>
+    <p class="mb-0">Review your selected items and proceed to checkout</p>
+</div>
+
+<div class="container py-5">
+    <a href="products.html" class="btn btn-success mb-4">← Continue Shopping</a>
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4" id="cartContainer">
+                    <!-- Cart items will be rendered here -->
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 mt-4 mt-lg-0">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4">Order Summary</h5>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Total Items:</span>
+                        <span id="totalItems" class="fw-bold">0</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="fs-5">Total Price:</span>
+                        <span id="totalPrice" class="fs-5 fw-bold text-success">$0.00</span>
+                    </div>
+                    <button id="checkoutBtn" class="btn btn-main w-100 py-3 fw-bold fs-5">Checkout / Thanh toán</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Login & Register Modals -->
+<div class="modal fade" id="loginModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Login</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm">
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input id="loginEmail" type="email" class="form-control" placeholder="Enter email" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input id="loginPassword" type="password" class="form-control" placeholder="Enter password" required />
+                    </div>
+                    <button type="button" id="loginButton" class="btn btn-main w-100">Login</button>
+                    <p id="loginMessage" class="mt-3 fw-bold"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="registerModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Register</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="registerForm">
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input id="registerName" type="text" class="form-control" placeholder="Enter your full name" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input id="registerEmail" type="email" class="form-control" placeholder="Enter email" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input id="registerPassword" type="password" class="form-control" placeholder="Create password" required />
+                    </div>
+                    <button type="button" id="registerButton" class="btn btn-main w-100">Register</button>
+                    <p id="registerMessage" class="mt-3 fw-bold"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    let cart = JSON.parse(sessionStorage.getItem('cart') || '[]');
+
+    function renderCart() {
+        const cartContainer = document.getElementById("cartContainer");
+        const cartCount = document.getElementById("cartCount");
+        const totalItems = document.getElementById("totalItems");
+        const totalPrice = document.getElementById("totalPrice");
+        
+        let html = '';
+        let count = 0;
+        let sum = 0;
+
+        if (cart.length === 0) {
+            cartContainer.innerHTML = '<div class="text-center text-muted my-5"><h5 class="fw-normal">Your cart is empty.</h5><a href="products.html" class="btn btn-outline-success mt-3">Shop Now</a></div>';
+            cartCount.textContent = "0";
+            totalItems.textContent = "0";
+            totalPrice.textContent = "$0.00";
+            document.getElementById("checkoutBtn").disabled = true;
+            return;
+        }
+
+        document.getElementById("checkoutBtn").disabled = false;
+
+        cart.forEach((item, index) => {
+            count += item.qty;
+            const priceNum = parseFloat(item.price.replace('$', ''));
+            sum += priceNum * item.qty;
+
+            html += `
+                <div class="d-flex flex-column flex-md-row align-items-center mb-4 pb-4 border-bottom text-center text-md-start">
+                    <img src="${item.image}" alt="${item.name}" class="cart-item-img shadow-sm mb-3 mb-md-0">
+                    <div class="ms-md-4 flex-grow-1 mb-3 mb-md-0">
+                        <h5 class="fw-bold mb-1">${item.name}</h5>
+                        <p class="text-muted mb-0">Price: <span class="text-success fw-bold">${item.price}</span></p>
+                    </div>
+                    <div class="d-flex align-items-center flex-wrap justify-content-center">
+                        <span class="me-4 fw-semibold mb-2 mb-md-0">Qty: ${item.qty}</span>
+                        <h6 class="fw-bold mb-0 me-4 text-warning mb-2 mb-md-0" style="min-width: 70px;">$${(priceNum * item.qty).toFixed(2)}</h6>
+                        <button class="btn btn-sm btn-danger remove-btn px-3" data-index="${index}">Remove</button>
+                    </div>
+                </div>
+            `;
+        });
+
+        cartContainer.innerHTML = html;
+        cartCount.textContent = count;
+        totalItems.textContent = count;
+        totalPrice.textContent = "$" + sum.toFixed(2);
+
+        // Add remove event listeners
+        document.querySelectorAll('.remove-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const idx = parseInt(this.getAttribute('data-index'));
+                cart.splice(idx, 1);
+                sessionStorage.setItem('cart', JSON.stringify(cart));
+                renderCart();
+            });
+        });
+    }
+
+    document.getElementById("checkoutBtn").addEventListener("click", function() {
+        if(confirm("Are you sure you want to proceed with the payment? / Bạn có chắc chắn muốn thanh toán?")) {
+            alert("Payment successful! The items have been removed from your cart. / Thanh toán thành công! Các mặt hàng đã bị xóa khỏi giỏ hàng.");
+            cart = [];
+            sessionStorage.setItem('cart', JSON.stringify(cart));
+            renderCart();
+        }
+    });
+
+    // Initialize cart render
+    renderCart();
+
+    // Update Auth UI
+    function updateAuthUI() {
+        const authSection = document.getElementById("authSection");
+        if (!authSection) return;
+        const user = JSON.parse(sessionStorage.getItem("user"));
+        if (user) {
+            authSection.innerHTML = `
+                <span class="fw-bold text-success me-3">Welcome, ${user.username}</span>
+                <button class="btn btn-outline-danger btn-sm" onclick="logout()">Logout</button>
+            `;
+        } else {
+            authSection.innerHTML = `
+                <button class="btn btn-outline-success me-2 btn-sm" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+                <button class="btn btn-main btn-sm" data-bs-toggle="modal" data-bs-target="#registerModal">Register</button>
+            `;
+        }
+    }
+
+    // Global Logout
+    window.logout = function() {
+        sessionStorage.removeItem("user");
+        updateAuthUI();
+    };
+
+    // Run on load
+    updateAuthUI();
+
+    const loginModalObj = document.getElementById('loginModal') ? new bootstrap.Modal(document.getElementById('loginModal')) : null;
+    const registerModalObj = document.getElementById('registerModal') ? new bootstrap.Modal(document.getElementById('registerModal')) : null;
+
+    const loginBtn = document.getElementById("loginButton");
+    if (loginBtn) {
+        loginBtn.addEventListener("click", async function () {
+            const email = document.getElementById("loginEmail").value.trim();
+            const pass = document.getElementById("loginPassword").value.trim();
+            const msg = document.getElementById("loginMessage");
+            if (!email || !pass) { msg.className = "mt-3 fw-bold text-danger"; msg.textContent = "Please fill in all fields."; return; }
+            
+            try {
+                const response = await fetch("http://localhost:8080/api/auth/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email: email, password: pass })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    msg.className = "mt-3 fw-bold text-success";
+                    msg.textContent = "Login successful!";
+                    // Lưu user vào sessionStorage
+                    sessionStorage.setItem("user", JSON.stringify(data));
+                    setTimeout(() => { 
+                        if(loginModalObj) loginModalObj.hide(); 
+                        document.getElementById("loginForm").reset(); 
+                        msg.textContent = ""; 
+                        if (data.role === 'OWNER') {
+                            window.location.href = 'Owner.html';
+                        } else {
+                            updateAuthUI(); 
+                        }
+                    }, 1200);
+                } else {
+                    msg.className = "mt-3 fw-bold text-danger";
+                    msg.textContent = data.message || "Invalid credentials.";
+                }
+            } catch (error) {
+                msg.className = "mt-3 fw-bold text-danger";
+                msg.textContent = "Error connecting to server.";
+            }
+        });
+    }
+
+    const regBtn = document.getElementById("registerButton");
+    if (regBtn) {
+        regBtn.addEventListener("click", async function () {
+            const name = document.getElementById("registerName").value.trim();
+            const email = document.getElementById("registerEmail").value.trim();
+            const pass = document.getElementById("registerPassword").value.trim();
+            const msg = document.getElementById("registerMessage");
+            if (!name || !email || !pass) { msg.className = "mt-3 fw-bold text-danger"; msg.textContent = "Please fill in all fields."; return; }
+            
+            try {
+                const response = await fetch("http://localhost:8080/api/auth/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username: name, email: email, password: pass })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    msg.className = "mt-3 fw-bold text-success";
+                    msg.textContent = "Registration successful!";
+                    setTimeout(() => { 
+                        if(registerModalObj) registerModalObj.hide(); 
+                        document.getElementById("registerForm").reset(); 
+                        msg.textContent = ""; 
+                    }, 1200);
+                } else {
+                    msg.className = "mt-3 fw-bold text-danger";
+                    msg.textContent = data.message || "Error registering user.";
+                }
+            } catch (error) {
+                msg.className = "mt-3 fw-bold text-danger";
+                msg.textContent = "Error connecting to server.";
+            }
+        });
+    }
+</script>
+</body>
+</html>
