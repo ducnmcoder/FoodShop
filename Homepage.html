@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FoodShop - Fresh Food Everyday</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+
+    <style>
+        :root {
+            --main-color: #28a745;
+            --secondary-color: #ff9800;
+            --light-bg: #f8fff8;
+            --dark-text: #222;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: var(--dark-text);
+            background-color: #ffffff;
+        }
+
+        .navbar {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: var(--main-color) !important;
+            font-size: 1.6rem;
+        }
+
+        .nav-link {
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: var(--main-color) !important;
+        }
+
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+                url("https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1600&q=80");
+            background-size: cover;
+            background-position: center;
+            min-height: 580px;
+            display: flex;
+            align-items: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+        }
+
+        .btn-main {
+            background-color: var(--main-color);
+            color: white;
+            border: none;
+        }
+
+        .btn-main:hover {
+            background-color: #218838;
+            color: white;
+        }
+
+        .btn-orange {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+        }
+
+        .btn-orange:hover {
+            background-color: #e68900;
+            color: white;
+        }
+
+        .section-title {
+            font-weight: bold;
+            color: var(--main-color);
+            margin-bottom: 10px;
+        }
+
+        .section-subtitle {
+            color: #666;
+            margin-bottom: 35px;
+        }
+
+        .category-card,
+        .food-card,
+        .blog-card {
+            border: none;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+            transition: 0.3s;
+            height: 100%;
+        }
+
+        .category-card:hover,
+        .food-card:hover,
+        .blog-card:hover {
+            transform: translateY(-6px);
+        }
+
+        .category-icon {
+            font-size: 3rem;
+            color: var(--main-color);
+        }
+
+        .food-card img,
+        .blog-card img {
+            height: 210px;
+            object-fit: cover;
+        }
+
+        .food-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .food-card .card-body {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .food-card .price {
+            margin-top: auto;
+        }
+
+        .food-card .add-cart-btn {
+            margin-top: 8px;
+        }
+
+        .price {
+            color: var(--secondary-color);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        footer {
+            background-color: #1f1f1f;
+            color: white;
+            padding: 35px 0;
+        }
+
+        footer a {
+            color: #ddd;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: var(--secondary-color);
+        }
+
+        .modal-header {
+            background-color: var(--main-color);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                min-height: 450px;
+                text-align: center;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        .category-card {
+            cursor: pointer;
+        }
+
+        .category-card.active {
+            border: 2px solid var(--main-color);
+            background-color: #f0fff4;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-white sticky-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="Homepage.html">
+            <img src="image/LogoPage.png" alt="FoodShop Logo" height="40">
+            <span class="text-success ms-2 fw-bold fs-4">FoodShop</span>
+        </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+                    <li class="nav-item">
+                        <a class="nav-link active text-success fw-semibold" href="Homepage.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="products.html">Food List</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="Blog.html">Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="About.html">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="Contact.html">Contact</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="cartDropdown" role="button"
+                            data-bs-toggle="dropdown">
+                            Cart <span id="cartCount" class="badge bg-danger">0</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end p-3 shadow"
+                            style="min-width: 320px; max-height: 400px; overflow-y: auto;" id="cartItems">
+                            <li id="emptyCart" class="text-center text-muted">Your cart is empty.</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <div class="ms-lg-3 mt-2 mt-lg-0" id="authSection">
+                    <button class="btn btn-outline-success me-2 btn-sm" data-bs-toggle="modal"
+                        data-bs-target="#loginModal">
+                        Login
+                    </button>
+                    <button class="btn btn-main btn-sm" data-bs-toggle="modal" data-bs-target="#registerModal">
+                        Register
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Fresh Food For Your Family</h1>
+            <p>
+                FoodShop delivers fresh, high-quality food every day with affordable prices,
+                fast delivery, and trusted service.
+            </p>
+        </div>
+    </section>
+
+    <section class="py-5">
+        <div class="container text-center">
+            <h2 class="section-title">Food Categories</h2>
+            <p class="section-subtitle">Popular food categories available at FoodShop</p>
+
+            <div class="row g-4">
+                <div class="col-md-3 col-sm-6">
+                    <div class="card category-card p-4 active" data-category="vegetables">
+                        <i class="bi bi-basket category-icon"></i>
+                        <h5 class="mt-3">Vegetables</h5>
+                        <p>Fresh vegetables and clean farm products.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6">
+                    <div class="card category-card p-4" data-category="meat">
+                        <i class="bi bi-egg-fried category-icon"></i>
+                        <h5 class="mt-3">Meat & Seafood</h5>
+                        <p>Fresh meat, fish, and seafood for daily meals.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6">
+                    <div class="card category-card p-4" data-category="drinks">
+                        <i class="bi bi-cup-hot category-icon"></i>
+                        <h5 class="mt-3">Drinks</h5>
+                        <p>Juice, milk, tea, coffee, and healthy drinks.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6">
+                    <div class="card category-card p-4" data-category="snacks">
+                        <i class="bi bi-cookie category-icon"></i>
+                        <h5 class="mt-3">Snacks</h5>
+                        <p>Snacks, cakes, and convenient food products.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-light" id="foods">
+        <div class="container">
+            <div class="text-center">
+                <h2 id="foodListTitle" class="section-title">Food List</h2>
+                <p id="foodListSubtitle" class="section-subtitle">Featured products from our store</p>
+            </div>
+
+            <div class="row g-4" id="foodItems">
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5" id="blog">
+        <div class="container">
+            <div class="text-center">
+                <h2 class="section-title">Latest Blog Posts</h2>
+                <p class="section-subtitle">Food tips, healthy eating, and shopping guides</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card blog-card">
+                        <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80"
+                            class="card-img-top" alt="Clean vegetables" />
+                        <div class="card-body">
+                            <h5 class="card-title">How to Choose Fresh Vegetables</h5>
+                            <p class="card-text">Simple tips to help you choose fresh, clean, and safe vegetables.</p>
+                            <button class="btn btn-outline-success read-more-btn"
+                                data-title="How to Choose Fresh Vegetables"
+                                data-image="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80"
+                                data-content="When choosing fresh vegetables, you should look for bright colors, firm texture, and natural smell. Avoid vegetables with dark spots, soft parts, or a strange odor. Fresh vegetables should be washed carefully and stored in a cool place to keep them safe and nutritious."
+                                data-bs-toggle="modal" data-bs-target="#blogModal">
+                                Read More
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card blog-card">
+                        <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=800&q=80"
+                            class="card-img-top" alt="Healthy meal" />
+                        <div class="card-body">
+                            <h5 class="card-title">Healthy Meal Ideas</h5>
+                            <p class="card-text">Easy and balanced meal ideas for students, families, and busy people.
+                            </p>
+                            <button class="btn btn-outline-success read-more-btn" data-title="Healthy Meal Ideas"
+                                data-image="https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=800&q=80"
+                                data-content="A healthy meal should include vegetables, protein, carbohydrates, and healthy fats. For example, you can prepare rice with grilled chicken, boiled vegetables, and fruit juice. This kind of meal is simple, balanced, and suitable for busy people."
+                                data-bs-toggle="modal" data-bs-target="#blogModal">
+                                Read More
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card blog-card">
+                        <img src="https://images.unsplash.com/photo-1505576399279-565b52d4ac71?auto=format&fit=crop&w=800&q=80"
+                            class="card-img-top" alt="Food storage" />
+                        <div class="card-body">
+                            <h5 class="card-title">How to Store Food Properly</h5>
+                            <p class="card-text">Learn how to keep your food fresh longer and reduce food waste.</p>
+                            <button class="btn btn-outline-success read-more-btn"
+                                data-title="How to Store Food Properly"
+                                data-image="https://images.unsplash.com/photo-1505576399279-565b52d4ac71?auto=format&fit=crop&w=800&q=80"
+                                data-content="Proper food storage helps keep food fresh and safe. Vegetables should be kept in the refrigerator, meat and seafood should be stored in the freezer, and dry foods should be placed in sealed containers. This helps reduce waste and maintain food quality."
+                                data-bs-toggle="modal" data-bs-target="#blogModal">
+                                Read More
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Login</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input id="loginEmail" type="email" class="form-control" placeholder="Enter email"
+                                required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input id="loginPassword" type="password" class="form-control" placeholder="Enter password"
+                                required />
+                        </div>
+                        <button type="button" id="loginButton" class="btn btn-main w-100">Login</button>
+                        <p id="loginMessage" class="mt-3 fw-bold"></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="registerModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Register</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerForm">
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            <input id="registerUsername" type="text" class="form-control" placeholder="Enter username"
+                                required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input id="registerEmail" type="email" class="form-control" placeholder="Enter email"
+                                required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input id="registerPassword" type="password" class="form-control"
+                                placeholder="Create password" required />
+                        </div>
+                        <button type="button" id="registerButton" class="btn btn-main w-100">Register</button>
+                        <p id="registerMessage" class="mt-3 fw-bold"></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="blogModal" tabindex="-1" aria-labelledby="blogModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="blogModalTitle">Blog Title</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <img id="blogModalImage" src="" alt="Blog image" class="img-fluid rounded mb-3"
+                        style="max-height: 250px; width: 100%; object-fit: cover;" />
+                    <p id="blogModalContent"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-main" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addCartModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="addCartTitle">Product</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="addCartImage" src="" class="img-fluid mb-3 rounded shadow-sm" alt="Product Image"
+                        style="max-height: 200px; width: 100%; object-fit: cover;">
+                    <p id="addCartPrice" class="fs-5 fw-bold text-warning"></p>
+                    <div class="w-50 mx-auto mb-3">
+                        <label for="addCartQty" class="form-label fw-semibold">Quantity:</label>
+                        <input type="number" id="addCartQty" class="form-control text-center" value="1" min="1">
+                    </div>
+                    <button class="btn btn-success w-100" id="confirmAddCart">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <h4>FoodShop</h4>
+                    <p>An online grocery store delivering fresh, safe, and convenient products for every family.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Follow Us</h5>
+                    <p>
+                        <i class="bi bi-facebook me-2 text-primary"></i>
+                        <i class="bi bi-instagram me-2 text-danger"></i>
+                        <i class="bi bi-tiktok me-2 text-light"></i>
+                        <i class="bi bi-youtube me-2 text-danger"></i>
+                    </p>
+                </div>
+            </div>
+            <hr />
+            <p class="text-center mb-0">&copy; 2026 FoodShop. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Global Variables for Foods
+        let foodDataFromApi = [];
+
+        // Global DOM references
+        const categoryCards = document.querySelectorAll(".category-card");
+        const foodItems = document.getElementById("foodItems");
+        const foodListTitle = document.getElementById("foodListTitle");
+        const foodListSubtitle = document.getElementById("foodListSubtitle");
+        const foodSection = document.getElementById("foods");
+
+        // Modal Bootstrappers
+        const cartModal = new bootstrap.Modal(document.getElementById('addCartModal'));
+        const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+        const registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
+
+        // Giỏ hàng State
+        let cart = JSON.parse(sessionStorage.getItem('cart') || '[]');
+        let currentProduct = null;
+
+        // 1. Hàm hiển thị danh sách sản phẩm theo danh mục (Global Scope)
+        function displayFoodList(category) {
+            let title = "Vegetables", subtitle = "Fresh vegetables and clean farm products.";
+            if (category === "meat") { title = "Meat & Seafood"; subtitle = "Fresh meat, fish, and seafood for daily meals."; }
+            else if (category === "drinks") { title = "Drinks"; subtitle = "Juice, milk, tea, coffee, and healthy drinks."; }
+            else if (category === "snacks") { title = "Snacks"; subtitle = "Snacks, cakes, and convenient food products."; }
+
+            foodListTitle.textContent = title;
+            foodListSubtitle.textContent = subtitle;
+            foodItems.innerHTML = "";
+
+            const filteredFoods = foodDataFromApi.filter(f => f.category === category);
+
+            filteredFoods.forEach(function (food) {
+                foodItems.innerHTML += `
+                <div class="col-lg-3 col-md-6">
+                    <div class="card food-card">
+                        <img src="${food.imageUrl}" class="card-img-top" alt="${food.name}" />
+                        <div class="card-body">
+                            <h5 class="card-title">${food.name}</h5>
+                            <p class="card-text">${food.description}</p>
+                            <p class="price">$${food.price}</p>
+                            <button class="btn btn-main w-100 add-cart-btn">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            });
+        }
+
+        async function fetchFoods() {
+            try {
+                const response = await fetch('http://localhost:8080/api/foods');
+                if (response.ok) {
+                    foodDataFromApi = await response.json();
+                    displayFoodList("vegetables");
+                }
+            } catch (error) {
+                console.error("Error fetching foods:", error);
+                foodItems.innerHTML = '<p class="text-center text-danger">Failed to load foods from server.</p>';
+            }
+        }
+
+        // 2. Hàm đồng bộ và cập nhật UI Giỏ hàng (Global Scope)
+        function updateCartUI() {
+            const cartItems = document.getElementById("cartItems");
+            const cartCount = document.getElementById("cartCount");
+            cartItems.innerHTML = "";
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<li id="emptyCart" class="text-center text-muted">Your cart is empty.</li>';
+                cartCount.textContent = 0;
+                sessionStorage.setItem('cart', JSON.stringify(cart));
+                return;
+            }
+
+            cart.forEach((item, index) => {
+                const li = document.createElement("li");
+                li.className = "mb-2 d-flex justify-content-between align-items-center border-bottom pb-2";
+                li.innerHTML = `
+                <div>
+                    <strong>${item.name}</strong><br>
+                    <span class="text-muted small">${item.price} x ${item.qty}</span>
+                </div>
+                <button class="btn btn-sm btn-danger remove-item" data-index="${index}">Remove</button>`;
+                cartItems.appendChild(li);
+            });
+
+            // Add View Cart / Checkout button
+            const checkoutLi = document.createElement("li");
+            checkoutLi.className = "mt-3 text-center";
+            checkoutLi.innerHTML = `<a href="cart.html" class="btn btn-success w-100">View Cart & Checkout</a>`;
+            cartItems.appendChild(checkoutLi);
+
+            cartCount.textContent = cart.reduce((sum, i) => sum + i.qty, 0);
+            sessionStorage.setItem('cart', JSON.stringify(cart));
+
+            // Sự kiện xóa phần tử khỏi giỏ hàng
+            document.querySelectorAll(".remove-item").forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    e.stopPropagation(); // Giữ menu dropdown không bị đóng đột ngột
+                    const idx = btn.dataset.index;
+                    cart.splice(idx, 1);
+                    updateCartUI();
+                });
+            });
+        }
+
+        // 3. Sự kiện bắt bộ lắng nghe click trên nút Add To Cart ngoài danh sách sản phẩm
+        document.addEventListener("click", function (e) {
+            if (e.target.classList.contains("add-cart-btn")) {
+                const card = e.target.closest(".food-card");
+                const name = card.querySelector(".card-title").textContent;
+                const price = card.querySelector(".price").textContent;
+                const image = card.querySelector("img").src;
+
+                currentProduct = { name, price, image, qty: 1 };
+
+                document.getElementById("addCartTitle").textContent = name;
+                document.getElementById("addCartPrice").textContent = price;
+                document.getElementById("addCartImage").src = image;
+                document.getElementById("addCartQty").value = 1;
+
+                cartModal.show();
+            }
+        });
+
+        // 4. Sự kiện ấn nút Xác nhận thêm vào giỏ trong Modal
+        document.getElementById("confirmAddCart").addEventListener("click", function () {
+            const qtyVal = parseInt(document.getElementById("addCartQty").value);
+            if (isNaN(qtyVal) || qtyVal < 1) {
+                alert("Please enter a valid quantity.");
+                return;
+            }
+
+            currentProduct.qty = qtyVal;
+            const exist = cart.find(i => i.name === currentProduct.name);
+            if (exist) {
+                exist.qty += currentProduct.qty;
+            } else {
+                cart.push(currentProduct);
+            }
+
+            updateCartUI();
+            cartModal.hide();
+        });
+
+        // 5. Sự kiện Click chuyển đổi Danh mục món ăn
+        categoryCards.forEach(function (card) {
+            card.addEventListener("click", function () {
+                const category = this.getAttribute("data-category");
+
+                categoryCards.forEach(function (item) {
+                    item.classList.remove("active");
+                });
+
+                this.classList.add("active");
+                displayFoodList(category);
+                foodSection.scrollIntoView({ behavior: "smooth" });
+            });
+        });
+
+        // 6. Sự kiện đọc thêm bài viết Blog (Read More)
+        const readMoreButtons = document.querySelectorAll(".read-more-btn");
+        readMoreButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                const title = this.getAttribute("data-title");
+                const image = this.getAttribute("data-image");
+                const content = this.getAttribute("data-content");
+
+                document.getElementById("blogModalTitle").textContent = title;
+                const blogImg = document.getElementById("blogModalImage");
+                blogImg.src = image;
+                blogImg.alt = title;
+                document.getElementById("blogModalContent").textContent = content;
+            });
+        });
+
+        // Cập nhật giao diện Auth (Login/Logout)
+        function updateAuthUI() {
+            const authSection = document.getElementById("authSection");
+            const user = JSON.parse(sessionStorage.getItem("user"));
+
+            if (user) {
+                authSection.innerHTML = `
+                <span class="me-3 fw-bold text-success">Welcome, ${user.username}</span>
+                <button class="btn btn-outline-danger btn-sm" id="logoutBtn">Logout</button>
+            `;
+                document.getElementById("logoutBtn").addEventListener("click", () => {
+                    sessionStorage.removeItem("user");
+                    updateAuthUI();
+                    alert("Logged out successfully.");
+                });
+            } else {
+                authSection.innerHTML = `
+                <button class="btn btn-outline-success me-2 btn-sm" data-bs-toggle="modal" data-bs-target="#loginModal">
+                    Login
+                </button>
+                <button class="btn btn-main btn-sm" data-bs-toggle="modal" data-bs-target="#registerModal">
+                    Register
+                </button>
+            `;
+            }
+        }
+
+        // Khởi tạo trạng thái ban đầu của ứng dụng khi Load trang
+        fetchFoods();
+        updateCartUI();
+        updateAuthUI();
+    </script>
+
+    <script>
+        const loginForm = document.getElementById("loginForm");
+        const loginButton = document.getElementById("loginButton");
+        const loginMessage = document.getElementById("loginMessage");
+
+        const registerForm = document.getElementById("registerForm");
+        const registerButton = document.getElementById("registerButton");
+        const registerMessage = document.getElementById("registerMessage");
+
+        // Xử lý Sự kiện Đăng Nhập
+        if (loginButton) {
+            loginButton.addEventListener("click", async function () {
+                const email = document.getElementById("loginEmail").value.trim();
+                const pass = document.getElementById("loginPassword").value.trim();
+
+                if (!email || !pass) {
+                    loginMessage.className = "mt-3 fw-bold text-danger";
+                    loginMessage.textContent = "Please fill in all fields.";
+                    return;
+                }
+
+                try {
+                    const response = await fetch("http://localhost:8080/api/auth/login", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ email: email, password: pass })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        loginMessage.className = "mt-3 fw-bold text-success";
+                        loginMessage.textContent = "Login successful! Welcome back.";
+
+                        // Lưu user vào sessionStorage
+                        sessionStorage.setItem("user", JSON.stringify(data));
+
+                        setTimeout(() => {
+                            loginModal.hide();
+                            loginForm.reset();
+                            loginMessage.textContent = "";
+
+                            if (data.role === 'OWNER') {
+                                window.location.href = 'Owner.html';
+                            } else {
+                                updateAuthUI();
+                            }
+                        }, 1200);
+                    } else {
+                        loginMessage.className = "mt-3 fw-bold text-danger";
+                        loginMessage.textContent = data.message || "Invalid credentials.";
+                    }
+                } catch (error) {
+                    loginMessage.className = "mt-3 fw-bold text-danger";
+                    loginMessage.textContent = "Error connecting to server.";
+                }
+            });
+        }
+
+        // Xử lý Sự kiện Đăng Ký
+        if (registerButton) {
+            registerButton.addEventListener("click", async function () {
+                const username = document.getElementById("registerUsername").value.trim();
+                const email = document.getElementById("registerEmail").value.trim();
+                const pass = document.getElementById("registerPassword").value.trim();
+
+                if (!username || !email || !pass) {
+                    registerMessage.className = "mt-3 fw-bold text-danger";
+                    registerMessage.textContent = "Please fill in all fields.";
+                    return;
+                }
+
+                if (pass.length < 6) {
+                    registerMessage.className = "mt-3 fw-bold text-danger";
+                    registerMessage.textContent = "Password must be at least 6 characters.";
+                    return;
+                }
+
+                try {
+                    const response = await fetch("http://localhost:8080/api/auth/register", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ username: username, email: email, password: pass })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok || response.status === 200) {
+                        registerMessage.className = "mt-3 fw-bold text-success";
+                        registerMessage.textContent = "Registration successful! You can now login.";
+
+                        setTimeout(() => {
+                            registerModal.hide();
+                            registerForm.reset();
+                            registerMessage.textContent = "";
+                            // Optionally open login modal
+                            loginModal.show();
+                        }, 1500);
+                    } else {
+                        registerMessage.className = "mt-3 fw-bold text-danger";
+                        registerMessage.textContent = data.message || "Registration failed.";
+                    }
+                } catch (error) {
+                    registerMessage.className = "mt-3 fw-bold text-danger";
+                    registerMessage.textContent = "Error connecting to server.";
+                }
+            });
+        }
+
+        // Cơ chế phòng ngừa lỗi (Fail-safe) cho Form liên hệ nếu được chèn thêm về sau
+        const contactForm = document.getElementById("contactForm");
+        if (contactForm) {
+            contactForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+                alert("Thank you! Your message has been sent successfully.");
+                contactForm.reset();
+            });
+        }
+    </script>
+</body>
+
+</html>
