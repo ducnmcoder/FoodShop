@@ -220,15 +220,10 @@
                     <li class="nav-item">
                         <a class="nav-link" href="Contact.html">Contact</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="cartDropdown" role="button"
-                            data-bs-toggle="dropdown">
+                    <li class="nav-item" id="cartNavItem">
+                        <a class="nav-link" href="cart.html">
                             Cart <span id="cartCount" class="badge bg-danger">0</span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end p-3 shadow"
-                            style="min-width: 320px; max-height: 400px; overflow-y: auto;" id="cartItems">
-                            <li id="emptyCart" class="text-center text-muted">Your cart is empty.</li>
-                        </ul>
                     </li>
                 </ul>
 
@@ -472,6 +467,21 @@
         </div>
     </div>
 
+    <!-- User Order History Modal -->
+    <div class="modal fade" id="userOrderHistoryModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">My Orders</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" style="max-height: 60vh; overflow-y: auto; background-color: #f8f9fa;">
+                    <div id="userOrderHistoryContent">Loading...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <div class="container">
             <div class="row g-4">
@@ -561,47 +571,11 @@
 
         // 2. Hàm đồng bộ và cập nhật UI Giỏ hàng (Global Scope)
         function updateCartUI() {
-            const cartItems = document.getElementById("cartItems");
             const cartCount = document.getElementById("cartCount");
-            cartItems.innerHTML = "";
-
-            if (cart.length === 0) {
-                cartItems.innerHTML = '<li id="emptyCart" class="text-center text-muted">Your cart is empty.</li>';
-                cartCount.textContent = 0;
+            if(cartCount) {
+                cartCount.textContent = cart.reduce((sum, i) => sum + i.qty, 0);
                 sessionStorage.setItem('cart', JSON.stringify(cart));
-                return;
             }
-
-            cart.forEach((item, index) => {
-                const li = document.createElement("li");
-                li.className = "mb-2 d-flex justify-content-between align-items-center border-bottom pb-2";
-                li.innerHTML = `
-                <div>
-                    <strong>${item.name}</strong><br>
-                    <span class="text-muted small">${item.price} x ${item.qty}</span>
-                </div>
-                <button class="btn btn-sm btn-danger remove-item" data-index="${index}">Remove</button>`;
-                cartItems.appendChild(li);
-            });
-
-            // Add View Cart / Checkout button
-            const checkoutLi = document.createElement("li");
-            checkoutLi.className = "mt-3 text-center";
-            checkoutLi.innerHTML = `<a href="cart.html" class="btn btn-success w-100">View Cart & Checkout</a>`;
-            cartItems.appendChild(checkoutLi);
-
-            cartCount.textContent = cart.reduce((sum, i) => sum + i.qty, 0);
-            sessionStorage.setItem('cart', JSON.stringify(cart));
-
-            // Sự kiện xóa phần tử khỏi giỏ hàng
-            document.querySelectorAll(".remove-item").forEach(btn => {
-                btn.addEventListener("click", (e) => {
-                    e.stopPropagation(); // Giữ menu dropdown không bị đóng đột ngột
-                    const idx = btn.dataset.index;
-                    cart.splice(idx, 1);
-                    updateCartUI();
-                });
-            });
         }
 
         // 3. Sự kiện bắt bộ lắng nghe click trên nút Add To Cart ngoài danh sách sản phẩm
@@ -677,19 +651,45 @@
         // Cập nhật giao diện Auth (Login/Logout)
         function updateAuthUI() {
             const authSection = document.getElementById("authSection");
+            const cartNavItem = document.getElementById("cartNavItem");
             const user = JSON.parse(sessionStorage.getItem("user"));
 
+            const blogNav = document.querySelector('a[href="Blog.html"]')?.parentElement;
+            const aboutNav = document.querySelector('a[href="About.html"]')?.parentElement;
+            const contactNav = document.querySelector('a[href="Contact.html"]')?.parentElement;
+
             if (user) {
+                let dashboardLink = '';
+                let userOrdersLink = '';
+                if (user.role === 'ADMIN' || user.role === 'OWNER') {
+                    dashboardLink = `<a href="${user.role === 'OWNER' ? 'Owner.html' : 'Admin.html'}" class="btn btn-outline-success btn-sm me-3">Dashboard</a>`;
+                    if (cartNavItem) cartNavItem.style.display = 'none';
+                    if (blogNav) blogNav.style.display = 'none';
+                    if (aboutNav) aboutNav.style.display = 'none';
+                    if (contactNav) contactNav.style.display = 'none';
+                } else {
+                    userOrdersLink = `<button class="btn btn-outline-info btn-sm me-3" onclick="viewMyOrders()">My Orders</button>`;
+                    if (cartNavItem) cartNavItem.style.display = 'block';
+                    if (blogNav) blogNav.style.display = 'block';
+                    if (aboutNav) aboutNav.style.display = 'block';
+                    if (contactNav) contactNav.style.display = 'block';
+                }
                 authSection.innerHTML = `
-                <span class="me-3 fw-bold text-success">Welcome, ${user.username}</span>
-                <button class="btn btn-outline-danger btn-sm" id="logoutBtn">Logout</button>
-            `;
+                    ${dashboardLink}
+                    ${userOrdersLink}
+                    <span class="me-3 fw-bold text-success">Welcome, ${user.username}</span>
+                    <button class="btn btn-outline-danger btn-sm" id="logoutBtn">Logout</button>
+                `;
                 document.getElementById("logoutBtn").addEventListener("click", () => {
                     sessionStorage.removeItem("user");
                     updateAuthUI();
                     alert("Logged out successfully.");
                 });
             } else {
+                if (cartNavItem) cartNavItem.style.display = 'block';
+                if (blogNav) blogNav.style.display = 'block';
+                if (aboutNav) aboutNav.style.display = 'block';
+                if (contactNav) contactNav.style.display = 'block';
                 authSection.innerHTML = `
                 <button class="btn btn-outline-success me-2 btn-sm" data-bs-toggle="modal" data-bs-target="#loginModal">
                     Login
@@ -705,6 +705,66 @@
         fetchFoods();
         updateCartUI();
         updateAuthUI();
+
+        // Xem lịch sử Order của user
+        async function viewMyOrders() {
+            const user = JSON.parse(sessionStorage.getItem("user"));
+            if (!user) return;
+            
+            const modalObj = new bootstrap.Modal(document.getElementById("userOrderHistoryModal"));
+            const content = document.getElementById("userOrderHistoryContent");
+            content.innerHTML = '<p class="text-center my-4">Loading orders...</p>';
+            modalObj.show();
+
+            try {
+                const res = await fetch("http://localhost:8080/api/orders/user/" + user.id);
+                if (res.ok) {
+                    const orders = await res.json();
+                    if (orders.length === 0) {
+                        content.innerHTML = '<p class="text-center text-muted my-4">You have no past orders.</p>';
+                        return;
+                    }
+
+                    let html = "";
+                    orders.forEach(o => {
+                        let itemsHtml = "";
+                        if (o.items && o.items.length > 0) {
+                            o.items.forEach(i => {
+                                itemsHtml += `<li>${i.quantity}x ${i.foodName} ($${i.price})</li>`;
+                            });
+                        }
+
+                        const statusBadge = o.status === "PENDING" ? `<span class="badge bg-warning text-dark">${o.status}</span>` 
+                            : (o.status === "APPROVED" ? `<span class="badge bg-success">${o.status}</span>` : `<span class="badge bg-danger">${o.status}</span>`);
+
+                        html += `
+                        <div class="card mb-3 shadow-sm border-0">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="mb-0 fw-bold">Order #${o.id}</h6>
+                                    ${statusBadge}
+                                </div>
+                                <p class="mb-1 text-muted small"><i class="bi bi-clock"></i> ${new Date(o.orderDate).toLocaleString()}</p>
+                                <hr class="my-2">
+                                <ul class="small mb-2 ps-3 text-secondary">
+                                    ${itemsHtml}
+                                </ul>
+                                <div class="text-end fw-bold text-success mt-2">
+                                    Total: $${o.totalAmount.toFixed(2)}
+                                </div>
+                            </div>
+                        </div>
+                        `;
+                    });
+                    content.innerHTML = html;
+                } else {
+                    content.innerHTML = '<p class="text-center text-danger my-4">Failed to load orders.</p>';
+                }
+            } catch (error) {
+                console.error(error);
+                content.innerHTML = '<p class="text-center text-danger my-4">Error connecting to server.</p>';
+            }
+        }
     </script>
 
     <script>
@@ -725,6 +785,12 @@
                 if (!email || !pass) {
                     loginMessage.className = "mt-3 fw-bold text-danger";
                     loginMessage.textContent = "Please fill in all fields.";
+                    return;
+                }
+
+                if (!email.includes('@')) {
+                    loginMessage.className = "mt-3 fw-bold text-danger";
+                    loginMessage.textContent = "Please enter a valid email address containing '@'.";
                     return;
                 }
 
@@ -749,7 +815,9 @@
                             loginForm.reset();
                             loginMessage.textContent = "";
 
-                            if (data.role === 'OWNER') {
+                            if (data.role === 'ADMIN') {
+                                window.location.href = 'Admin.html';
+                            } else if (data.role === 'OWNER') {
                                 window.location.href = 'Owner.html';
                             } else {
                                 updateAuthUI();
@@ -779,6 +847,12 @@
                     return;
                 }
 
+                if (!email.includes('@')) {
+                    registerMessage.className = "mt-3 fw-bold text-danger";
+                    registerMessage.textContent = "Please enter a valid email address containing '@'.";
+                    return;
+                }
+
                 if (pass.length < 6) {
                     registerMessage.className = "mt-3 fw-bold text-danger";
                     registerMessage.textContent = "Password must be at least 6 characters.";
@@ -796,15 +870,8 @@
 
                     if (response.ok || response.status === 200) {
                         registerMessage.className = "mt-3 fw-bold text-success";
-                        registerMessage.textContent = "Registration successful! You can now login.";
-
-                        setTimeout(() => {
-                            registerModal.hide();
-                            registerForm.reset();
-                            registerMessage.textContent = "";
-                            // Optionally open login modal
-                            loginModal.show();
-                        }, 1500);
+                        registerMessage.innerHTML = "Registration successful! <a href='#' class='text-decoration-underline' onclick='registerModal.hide(); loginModal.show(); return false;'>Go to login</a>";
+                        registerForm.reset();
                     } else {
                         registerMessage.className = "mt-3 fw-bold text-danger";
                         registerMessage.textContent = data.message || "Registration failed.";

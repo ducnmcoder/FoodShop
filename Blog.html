@@ -70,13 +70,10 @@
                 <li class="nav-item"><a class="nav-link active text-success fw-semibold" href="Blog.html">Blog</a></li>
                 <li class="nav-item"><a class="nav-link" href="About.html">About Us</a></li>
                 <li class="nav-item"><a class="nav-link" href="Contact.html">Contact</a></li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="cartDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <li class="nav-item" id="cartNavItem">
+                    <a class="nav-link" href="cart.html">
                         Cart <span id="cartCount" class="badge bg-danger">0</span>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end p-3 shadow" style="min-width: 320px; max-height: 400px; overflow-y: auto;" id="cartItems">
-                        <li id="emptyCart" class="text-center text-muted py-2">Your cart is empty.</li>
-                    </ul>
                 </li>
             </ul>
             <div class="ms-lg-3 mt-2 mt-lg-0" id="authSection">
@@ -291,58 +288,35 @@
     // Cart & Auth Logic
     let cart = JSON.parse(sessionStorage.getItem('cart') || '[]');
     function updateCartUI() {
-        const cartItems = document.getElementById("cartItems");
         const cartCount = document.getElementById("cartCount");
-        if(!cartItems || !cartCount) return;
-        cartItems.innerHTML = "";
-        if (cart.length === 0) {
-            cartItems.innerHTML = '<li id="emptyCart" class="text-center text-muted">Your cart is empty.</li>';
-            cartCount.textContent = 0;
+        if(cartCount) {
+            cartCount.textContent = cart.reduce((sum, i) => sum + i.qty, 0);
             sessionStorage.setItem('cart', JSON.stringify(cart));
-            return;
         }
-        cart.forEach((item, index) => {
-            const li = document.createElement("li");
-            li.className = "mb-2 d-flex justify-content-between align-items-center border-bottom pb-2";
-            li.innerHTML = `
-                <div>
-                    <strong>${item.name}</strong><br>
-                    <span class="text-muted small">${item.price} x ${item.qty}</span>
-                </div>
-                <button class="btn btn-sm btn-danger remove-item" data-index="${index}">Remove</button>`;
-            cartItems.appendChild(li);
-        });
-
-        // Add View Cart / Checkout button
-        const checkoutLi = document.createElement("li");
-        checkoutLi.className = "mt-3 text-center";
-        checkoutLi.innerHTML = `<a href="cart.html" class="btn btn-success w-100">View Cart & Checkout</a>`;
-        cartItems.appendChild(checkoutLi);
-
-        cartCount.textContent = cart.reduce((sum, i) => sum + i.qty, 0);
-        sessionStorage.setItem('cart', JSON.stringify(cart));
-        document.querySelectorAll(".remove-item").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                e.stopPropagation();
-                const idx = btn.dataset.index;
-                cart.splice(idx, 1);
-                updateCartUI();
-            });
-        });
     }
     updateCartUI();
 
     // Update Auth UI
     function updateAuthUI() {
         const authSection = document.getElementById("authSection");
+        const cartNavItem = document.getElementById("cartNavItem");
         if (!authSection) return;
         const user = JSON.parse(sessionStorage.getItem("user"));
         if (user) {
+            let dashboardLink = '';
+            if (user.role === 'ADMIN' || user.role === 'OWNER') {
+                dashboardLink = `<a href="${user.role === 'OWNER' ? 'Owner.html' : 'Admin.html'}" class="btn btn-outline-success btn-sm me-3">Dashboard</a>`;
+                if (cartNavItem) cartNavItem.style.display = 'none';
+            } else {
+                if (cartNavItem) cartNavItem.style.display = 'block';
+            }
             authSection.innerHTML = `
+                ${dashboardLink}
                 <span class="fw-bold text-success me-3">Welcome, ${user.username}</span>
                 <button class="btn btn-outline-danger btn-sm" onclick="logout()">Logout</button>
             `;
         } else {
+            if (cartNavItem) cartNavItem.style.display = 'block';
             authSection.innerHTML = `
                 <button class="btn btn-outline-success me-2 btn-sm" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
                 <button class="btn btn-main btn-sm" data-bs-toggle="modal" data-bs-target="#registerModal">Register</button>

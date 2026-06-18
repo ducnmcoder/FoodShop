@@ -1,250 +1,326 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Owner Panel - Manage Foods</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manager Panel - Manage Users</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
     <style>
-        :root {
-            --main-color: #28a745;
-        }
+      :root {
+        --main-color: #28a745;
+      }
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+      }
 
-        .navbar-brand {
-            font-weight: bold;
-            color: var(--main-color) !important;
-            font-size: 1.6rem;
-        }
+      .navbar-brand {
+        font-weight: bold;
+        color: var(--main-color) !important;
+        font-size: 1.6rem;
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
+  <body>
     <nav class="navbar navbar-expand-lg bg-white sticky-top shadow-sm mb-4">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="Homepage.html">
-                <img src="image/LogoPage.png" alt="FoodShop Logo" height="40">
-                <span class="text-success ms-2 fw-bold fs-4">FoodShop</span>
-                <span class="text-secondary ms-2 fs-5">| Owner Panel</span>
-            </a>
-            <div class="ms-auto d-flex align-items-center">
-                <span id="ownerGreeting" class="me-3 fw-bold text-success"></span>
-                <button class="btn btn-outline-danger btn-sm me-2" onclick="ownerLogout()">Logout</button>
-            </div>
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="Homepage.html">
+          <img src="image/LogoPage.png" alt="FoodShop Logo" height="40" />
+          <span class="text-success ms-2 fw-bold fs-4">FoodShop</span>
+          <span class="text-secondary ms-2 fs-5">| Owner Panel</span>
+        </a>
+
+        <div class="collapse navbar-collapse ms-4">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="Admin.html">Manage Foods</a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="Admin.html"
+                onclick="sessionStorage.setItem('openTab', 'orders')"
+                >Order History</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active fw-bold text-success" href="Owner.html"
+                >Manage Users</a
+              >
+            </li>
+          </ul>
         </div>
+
+        <div class="ms-auto d-flex align-items-center">
+          <span id="ownerGreeting" class="me-3 fw-bold text-success"></span>
+          <button
+            class="btn btn-outline-danger btn-sm me-2"
+            onclick="ownerLogout()"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
     </nav>
 
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2>Manage Foods</h2>
-            <button class="btn btn-success" onclick="openAddModal()">
-                <i class="bi bi-plus-circle"></i> Add New Food
-            </button>
-        </div>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Manage Users</h2>
+      </div>
 
-        <div class="table-responsive bg-white p-3 rounded shadow-sm">
-            <table class="table table-hover align-middle">
-                <thead class="table-success">
-                    <tr>
-                        <th>ID</th>
-                        <th>Image</th>
-                        <th>Name</th>
-                        <th>Category</th>
-                        <th>Price</th>
-                        <th class="text-center">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="foodTableBody">
-                    <!-- Data will be loaded here -->
-                </tbody>
-            </table>
-        </div>
+      <div class="table-responsive bg-white p-3 rounded shadow-sm">
+        <table class="table table-hover align-middle">
+          <thead class="table-success">
+            <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="userTableBody">
+            <!-- Data will be loaded here -->
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- Modal for Add/Edit -->
-    <div class="modal fade" id="foodModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title" id="foodModalTitle">Add/Edit Food</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="foodForm">
-                        <input type="hidden" id="foodId">
-                        <div class="mb-3">
-                            <label class="form-label">Name</label>
-                            <input type="text" id="foodName" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Category</label>
-                            <select id="foodCategory" class="form-select" required>
-                                <option value="vegetables">Vegetables</option>
-                                <option value="meat">Meat & Seafood</option>
-                                <option value="drinks">Drinks</option>
-                                <option value="snacks">Snacks</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Price ($)</label>
-                            <input type="number" step="0.01" id="foodPrice" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Image URL</label>
-                            <input type="text" id="foodImage" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Description</label>
-                            <textarea id="foodDesc" class="form-control" rows="3" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-success w-100" id="saveBtn">Save</button>
-                    </form>
-                </div>
-            </div>
+    <!-- Order History Modal -->
+    <div class="modal fade" id="orderHistoryModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-success text-white">
+            <h5 class="modal-title">Order History</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div
+            class="modal-body"
+            style="
+              max-height: 60vh;
+              overflow-y: auto;
+              background-color: #f8f9fa;
+            "
+          >
+            <div id="orderHistoryContent">Loading...</div>
+          </div>
         </div>
+      </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Verify Owner Access
-        const ownerUserJson = sessionStorage.getItem("user");
-        if (!ownerUserJson) {
-            window.location.href = "Homepage.html";
+      // Verify Access
+      const ownerUserJson = sessionStorage.getItem("user");
+      let currentUserId = null;
+      if (!ownerUserJson) {
+        window.location.href = "Homepage.html";
+      } else {
+        const ownerUser = JSON.parse(ownerUserJson);
+        if (ownerUser.role !== "ADMIN" && ownerUser.role !== "OWNER") {
+          window.location.href = "Homepage.html";
         } else {
-            const ownerUser = JSON.parse(ownerUserJson);
-            if (ownerUser.role !== 'OWNER') {
-                window.location.href = "Homepage.html";
-            } else {
-                const greetingEl = document.getElementById("ownerGreeting");
-                if (greetingEl) {
-                    greetingEl.textContent = "Welcome, " + ownerUser.username;
-                }
-            }
+          currentUserId = ownerUser.id;
+          const greetingEl = document.getElementById("ownerGreeting");
+          if (greetingEl) {
+            greetingEl.textContent = "Welcome, " + ownerUser.username;
+          }
+
+          if (ownerUser.role === "ADMIN") {
+            document.querySelector(".text-secondary.ms-2.fs-5").textContent =
+              "| Admin Panel";
+          } else {
+            document.querySelector(".text-secondary.ms-2.fs-5").textContent =
+              "| Owner Panel";
+          }
         }
+      }
 
-        // Owner Logout
-        window.ownerLogout = function () {
-            sessionStorage.removeItem("user");
-            window.location.href = "Homepage.html";
-        };
+      // Owner Logout
+      window.ownerLogout = function () {
+        sessionStorage.removeItem("user");
+        window.location.href = "Homepage.html";
+      };
 
-        const apiUrl = 'http://localhost:8080/api/foods';
-        const foodModal = new bootstrap.Modal(document.getElementById('foodModal'));
-        const foodForm = document.getElementById('foodForm');
+      const apiUsersUrl = "http://localhost:8080/api/users";
 
-        // Load Foods
-        async function loadFoods() {
-            try {
-                const res = await fetch(apiUrl);
-                const foods = await res.json();
-                const tbody = document.getElementById('foodTableBody');
-                tbody.innerHTML = '';
+      // Load Users
+      async function loadUsers() {
+        try {
+          const res = await fetch(apiUsersUrl);
+          const users = await res.json();
+          const tbody = document.getElementById("userTableBody");
+          tbody.innerHTML = "";
 
-                foods.forEach(food => {
-                    tbody.innerHTML += `
+          users.forEach((user) => {
+            const isLocked = user.locked;
+            const statusBadge = isLocked
+              ? '<span class="badge bg-danger">Locked</span>'
+              : '<span class="badge bg-success">Active</span>';
+
+            let actionButtons = "";
+            const isLoggedAdmin =
+              ownerUserJson && JSON.parse(ownerUserJson).role === "ADMIN";
+
+            if (!isLoggedAdmin) {
+              if (user.id !== currentUserId) {
+                if (isLocked) {
+                  actionButtons = `
+                                    <button class="btn btn-sm btn-outline-success" onclick="unlockUser(${user.id})">
+                                        <i class="bi bi-unlock"></i> Unlock
+                                    </button>
+                                `;
+                } else {
+                  actionButtons = `
+                                    <button class="btn btn-sm btn-outline-danger" onclick="lockUser(${user.id})">
+                                        <i class="bi bi-lock"></i> Lock
+                                    </button>
+                                `;
+                }
+
+                actionButtons += `
+                                    <button class="btn btn-sm btn-outline-info ms-1" onclick="viewOrderHistory(${user.id}, '${user.username}')">
+                                        <i class="bi bi-receipt"></i> Orders
+                                    </button>
+                                `;
+              }
+            }
+
+            tbody.innerHTML += `
                     <tr>
-                        <td>${food.id}</td>
-                        <td><img src="${food.imageUrl}" alt="${food.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;"></td>
-                        <td class="fw-bold">${food.name}</td>
-                        <td><span class="badge bg-secondary">${food.category}</span></td>
-                        <td class="text-success fw-bold">$${food.price}</td>
+                        <td>${user.id}</td>
+                        <td class="fw-bold">${user.username}</td>
+                        <td>${user.email}</td>
+                        <td>${user.role}</td>
+                        <td>${statusBadge}</td>
                         <td class="text-center">
-                            <button class="btn btn-sm btn-outline-primary me-2" onclick='openEditModal(${JSON.stringify(food).replace(/'/g, "&#39;")})'>
-                                <i class="bi bi-pencil"></i> Edit
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger" onclick="deleteFood(${food.id})">
-                                <i class="bi bi-trash"></i> Delete
-                            </button>
+                            ${actionButtons}
                         </td>
                     </tr>
                 `;
+          });
+        } catch (error) {
+          console.error("Error loading users:", error);
+          alert("Failed to connect to backend API.");
+        }
+      }
+
+      async function lockUser(id) {
+        if (confirm("Are you sure you want to lock this user?")) {
+          try {
+            const res = await fetch(`${apiUsersUrl}/${id}/lock`, {
+              method: "PUT",
+            });
+            if (res.ok) {
+              loadUsers();
+            } else {
+              alert("Failed to lock user.");
+            }
+          } catch (error) {
+            console.error("Error locking user:", error);
+          }
+        }
+      }
+
+      async function unlockUser(id) {
+        if (confirm("Are you sure you want to unlock this user?")) {
+          try {
+            const res = await fetch(`${apiUsersUrl}/${id}/unlock`, {
+              method: "PUT",
+            });
+            if (res.ok) {
+              loadUsers();
+            } else {
+              alert("Failed to unlock user.");
+            }
+          } catch (error) {
+            console.error("Error unlocking user:", error);
+          }
+        }
+      }
+
+      const orderHistoryModalObj = new bootstrap.Modal(
+        document.getElementById("orderHistoryModal"),
+      );
+
+      async function viewOrderHistory(userId, username) {
+        document.querySelector("#orderHistoryModal .modal-title").textContent =
+          "Order History - " + username;
+        const content = document.getElementById("orderHistoryContent");
+        content.innerHTML = '<p class="text-center my-4">Loading orders...</p>';
+        orderHistoryModalObj.show();
+
+        try {
+          const res = await fetch(
+            "http://localhost:8080/api/orders/user/" + userId,
+          );
+          if (res.ok) {
+            const orders = await res.json();
+            if (orders.length === 0) {
+              content.innerHTML =
+                '<p class="text-center text-muted my-4">No orders found for this user.</p>';
+              return;
+            }
+
+            let html = "";
+            orders.forEach((o) => {
+              let itemsHtml = "";
+              if (o.items && o.items.length > 0) {
+                o.items.forEach((i) => {
+                  itemsHtml += `<li>${i.quantity}x ${i.foodName} ($${i.price})</li>`;
                 });
-            } catch (error) {
-                console.error('Error loading foods:', error);
-                alert('Failed to connect to backend API.');
-            }
+              }
+
+              html += `
+                        <div class="card mb-3 shadow-sm border-0">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="mb-0 fw-bold">Order #${o.id}</h6>
+                                    <span class="badge ${o.status === "PENDING" ? "bg-warning" : "bg-success"}">${o.status}</span>
+                                </div>
+                                <p class="mb-1 text-muted small"><i class="bi bi-clock"></i> ${new Date(o.orderDate).toLocaleString()}</p>
+                                <p class="mb-1 small"><strong>Name:</strong> ${o.customerName} | <strong>Phone:</strong> ${o.customerPhone}</p>
+                                <p class="mb-1 small"><strong>Address:</strong> ${o.deliveryAddress}</p>
+                                <p class="mb-2 small"><strong>Payment:</strong> ${o.paymentMethod}</p>
+                                <hr class="my-2">
+                                <ul class="small mb-2 ps-3 text-secondary">
+                                    ${itemsHtml}
+                                </ul>
+                                <div class="text-end fw-bold text-success mt-2">
+                                    Total: $${o.totalAmount.toFixed(2)}
+                                </div>
+                            </div>
+                        </div>
+                        `;
+            });
+            content.innerHTML = html;
+          } else {
+            content.innerHTML =
+              '<p class="text-center text-danger my-4">Failed to load orders.</p>';
+          }
+        } catch (error) {
+          console.error(error);
+          content.innerHTML =
+            '<p class="text-center text-danger my-4">Error connecting to server.</p>';
         }
+      }
 
-        // Open Add Modal
-        function openAddModal() {
-            document.getElementById('foodModalTitle').innerText = 'Add New Food';
-            foodForm.reset();
-            document.getElementById('foodId').value = '';
-            foodModal.show();
-        }
-
-        // Open Edit Modal
-        function openEditModal(food) {
-            document.getElementById('foodModalTitle').innerText = 'Edit Food';
-            document.getElementById('foodId').value = food.id;
-            document.getElementById('foodName').value = food.name;
-            document.getElementById('foodCategory').value = food.category;
-            document.getElementById('foodPrice').value = food.price;
-            document.getElementById('foodImage').value = food.imageUrl;
-            document.getElementById('foodDesc').value = food.description;
-            foodModal.show();
-        }
-
-        // Save (Add/Update) Food
-        foodForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('foodId').value;
-
-            const foodData = {
-                name: document.getElementById('foodName').value,
-                category: document.getElementById('foodCategory').value,
-                price: parseFloat(document.getElementById('foodPrice').value),
-                imageUrl: document.getElementById('foodImage').value,
-                description: document.getElementById('foodDesc').value
-            };
-
-            try {
-                const method = id ? 'PUT' : 'POST';
-                const url = id ? `${apiUrl}/${id}` : apiUrl;
-
-                const res = await fetch(url, {
-                    method: method,
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(foodData)
-                });
-
-                if (res.ok) {
-                    foodModal.hide();
-                    loadFoods();
-                } else {
-                    alert('Failed to save food.');
-                }
-            } catch (error) {
-                console.error('Error saving food:', error);
-            }
-        });
-
-        // Delete Food
-        async function deleteFood(id) {
-            if (confirm('Are you sure you want to delete this food item?')) {
-                try {
-                    const res = await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
-                    if (res.ok) {
-                        loadFoods();
-                    } else {
-                        alert('Failed to delete food.');
-                    }
-                } catch (error) {
-                    console.error('Error deleting food:', error);
-                }
-            }
-        }
-
-        // Initialize
-        loadFoods();
+      // Initialize
+      loadUsers();
     </script>
-</body>
-
+  </body>
 </html>

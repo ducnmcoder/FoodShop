@@ -22,6 +22,9 @@ public class User {
     @Column(length = 20)
     private String role = "CUSTOMER";
 
+    @Column(nullable = false)
+    private boolean locked = false;
+
     public User() {}
 
     public Long getId() { return id; }
@@ -34,4 +37,6 @@ public class User {
     public void setPassword(String password) { this.password = password; }
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+    public boolean isLocked() { return locked; }
+    public void setLocked(boolean locked) { this.locked = locked; }
 }

@@ -47,6 +47,9 @@ public class AuthController {
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
+            if (user.isLocked()) {
+                return ResponseEntity.status(403).body(Map.of("message", "Error: Account is locked. Please contact admin."));
+            }
             // In a real app, check hashed password.
             if (user.getPassword().equals(loginRequest.getPassword())) {
                 Map<String, Object> response = new HashMap<>();
